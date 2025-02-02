@@ -100,18 +100,20 @@ fun LandingScreen(navController: NavController, viewModel: MovieViewModel = view
                 }
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Second Row for "Upcoming"
+                // Second Row for "Upcoming" and "Favourites"
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    CategoryTab(
-                        text = "Upcoming",
-                        isSelected = selectedCategory == "Upcoming",
-                        onClick = { selectedCategory = "Upcoming" }
-                    )
+                    listOf("Upcoming", "Favourites").forEach { category ->
+                        CategoryTab(
+                            text = category,
+                            isSelected = selectedCategory == category,
+                            onClick = { selectedCategory = category }
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(6.dp))
             }
