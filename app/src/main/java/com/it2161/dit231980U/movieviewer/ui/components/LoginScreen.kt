@@ -141,6 +141,7 @@ fun LoginScreen(navController: NavController) {
                         loginError = true
                     }
                 },
+                colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Login")
@@ -153,7 +154,7 @@ fun LoginScreen(navController: NavController) {
                     navController.navigate("register_screen")
                 }
             ) {
-                Text(text = "Register")
+                Text(text = "Register", color = Color.Black)
             }
 
             Spacer(modifier = Modifier.height(30.dp))
