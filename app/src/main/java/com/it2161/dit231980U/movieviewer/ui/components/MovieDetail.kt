@@ -125,6 +125,12 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                         fontSize = 16.sp,
                         color = Color.Black
                     )
+                    // Original Language
+                    Text(
+                        text = "Original Language: ${movie.original_language.uppercase()}",
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
                     // Votes
                     Text(
                         text = "Votes: ${movie.vote_count}",
