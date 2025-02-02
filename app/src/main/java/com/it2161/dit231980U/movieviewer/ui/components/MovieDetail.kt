@@ -3,6 +3,8 @@ package com.it2161.dit231980U.movieviewer.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -307,34 +309,22 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
-            Row(
+            // Use a Column to display each similar movie
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(horizontal = 8.dp)
             ) {
                 similarMovies.forEach { movie ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
-                            contentDescription = movie.title,
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                        )
-                        Text(
-                            text = movie.title,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Black,
-                            modifier = Modifier.width(120.dp)
-                        )
-                    }
+                    MovieItem(movie = movie, navController = navController)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+        } else {
+            Text(
+                text = "No similar movies available",
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
