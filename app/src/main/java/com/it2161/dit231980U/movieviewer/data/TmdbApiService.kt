@@ -36,4 +36,11 @@ interface TmdbApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = "0935002c67cead875d06b7f58354e7d1"
     ): ReviewResponse
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieById(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = "0935002c67cead875d06b7f58354e7d1"
+    ): Movie
+
 }

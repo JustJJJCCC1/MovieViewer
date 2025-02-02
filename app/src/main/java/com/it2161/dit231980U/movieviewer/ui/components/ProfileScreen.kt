@@ -72,7 +72,7 @@ fun ProfileScreen(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = { navController.navigate("landing_screen") }) {
+            IconButton(onClick = { navController.navigate("landing_screen/Popular") }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back Icon",
@@ -284,7 +284,7 @@ fun ProfileScreen(navController: NavController) {
                         email = email
                     )
                     // Navigate to the Landing Screen
-                    navController.navigate("landing_screen")
+                    navController.navigate("landing_screen/Popular")
                 },
                 modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
             ) {

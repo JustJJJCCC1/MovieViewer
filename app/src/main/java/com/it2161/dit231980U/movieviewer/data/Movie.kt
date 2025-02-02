@@ -42,3 +42,7 @@ data class Review(
 data class ReviewResponse(
     val results: List<Review>
 )
+
+data class FavoriteMovie(
+    val movieId: Int,
+)

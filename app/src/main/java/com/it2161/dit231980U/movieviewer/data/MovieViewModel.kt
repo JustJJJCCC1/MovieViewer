@@ -2,6 +2,7 @@ package com.it2161.dit231980U.movieviewer.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.it2161.dit231980U.movieviewer.MovieRaterApplication
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,6 +23,10 @@ class MovieViewModel : ViewModel() {
     // State to hold the reviews of a selected movie
     private val _movieReviews = MutableStateFlow<List<Review>>(emptyList())
     val movieReviews: StateFlow<List<Review>> get() = _movieReviews
+
+    // State to hold the list of favorite movies
+    private val _favoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val favoriteMovies: StateFlow<List<Movie>> get() = _favoriteMovies
 
     // Function to fetch movies based on the selected category
     fun fetchMovies(category: String) {
@@ -69,6 +74,29 @@ class MovieViewModel : ViewModel() {
                 _movieReviews.value = response.results
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun fetchFavoriteMovies() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val favoriteMovieIds = MovieRaterApplication.instance.userProfile?.favoriteMovies?.map { it.movieId } ?: emptyList()
+                val favoriteMoviesList = mutableListOf<Movie>()
+
+                for (id in favoriteMovieIds) {
+                    try {
+                        val movie = RetrofitClient.instance.getMovieById(id)
+                        favoriteMoviesList.add(movie)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                _movies.value = favoriteMoviesList  // Store movies like other categories
+            } finally {
+                _isLoading.value = false
             }
         }
     }

@@ -136,7 +136,7 @@ fun LoginScreen(navController: NavController) {
                     val userProfile = app.userProfile
                     if (userProfile != null && userId.text == userProfile.userName && password.text == userProfile.password) {
                         loginError = false
-                        navController.navigate("landing_screen") // Navigate to the home screen
+                        navController.navigate("landing_screen/Popular") // Navigate to the home screen
                     } else {
                         loginError = true
                     }

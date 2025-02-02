@@ -4,4 +4,5 @@ data class UserProfile(
     val userName: String="",
     val password: String="",
     val email: String="",
+    val favoriteMovies: MutableList<FavoriteMovie> = mutableListOf() // List of FavoriteMovie objects
 )

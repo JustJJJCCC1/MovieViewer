@@ -7,7 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +25,7 @@ import com.it2161.dit231980U.movieviewer.data.MovieViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.draw.clip
+import com.it2161.dit231980U.movieviewer.MovieRaterApplication
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,6 +34,9 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
     val movieDetail by viewModel.movieDetail.collectAsState()
     val movieReviews by viewModel.movieReviews.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    val userProfile = MovieRaterApplication.instance.userProfile
+    val isFavorite = remember { mutableStateOf(userProfile?.favoriteMovies?.any { it.movieId == movieId } == true) }
 
     LaunchedEffect(movieId) {
         viewModel.fetchMovieDetails(movieId)
@@ -54,7 +60,7 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = { navController.navigate("landing_screen") }) {
+            IconButton(onClick = { navController.navigate("landing_screen/Popular") }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back Icon",
@@ -63,12 +69,29 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                 )
             }
             Text(
-                text = movieDetail?.title ?: "Movie Details",
+                text = "Movie Details",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-            Spacer(modifier = Modifier.width(32.dp)) // Spacer for the alignment
+
+            // Favorite Button
+            IconButton(onClick = {
+                if (isFavorite.value) {
+                    MovieRaterApplication.instance.removeFavoriteMovie(movieId)
+                } else {
+                    MovieRaterApplication.instance.addFavoriteMovie(movieId)
+                }
+                isFavorite.value = !isFavorite.value
+                navController.navigate("landing_screen/Favourites") // Navigate with category parameter
+            }) {
+                Icon(
+                    imageVector = if (isFavorite.value) Icons.Filled.Delete else Icons.Filled.Add,
+                    contentDescription = if (isFavorite.value) "Remove from Favorites" else "Add to Favorites",
+                    modifier = Modifier.size(32.dp),
+                    tint = if (isFavorite.value) Color.Black else Color.Black
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

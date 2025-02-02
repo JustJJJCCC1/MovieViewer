@@ -26,8 +26,9 @@ class MainActivity : ComponentActivity() {
                     composable("register_screen") {
                         RegisterUserScreen(navController)
                     }
-                    composable("landing_screen") {
-                        LandingScreen(navController)
+                    composable("landing_screen/{category}") { backStackEntry ->
+                        val category = backStackEntry.arguments?.getString("category") ?: "Popular"
+                        LandingScreen(navController, navBackStackEntry = backStackEntry)
                     }
                     composable("profile_screen") {
                         ProfileScreen(navController)

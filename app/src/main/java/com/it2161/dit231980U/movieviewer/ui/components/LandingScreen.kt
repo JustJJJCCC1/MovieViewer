@@ -25,21 +25,29 @@ import coil.compose.AsyncImage
 import com.it2161.dit231980U.movieviewer.data.Movie
 import com.it2161.dit231980U.movieviewer.data.MovieViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun LandingScreen(navController: NavController, viewModel: MovieViewModel = viewModel()) {
+fun LandingScreen(navController: NavController, navBackStackEntry: NavBackStackEntry, viewModel: MovieViewModel = viewModel()) {
+
+    val category = navBackStackEntry.arguments?.getString("category") ?: "Popular"
+
     // Observe the movies and loading state from the ViewModel
     val movies by viewModel.movies.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     // State to track the selected category
-    var selectedCategory by remember { mutableStateOf("Popular") }
+    var selectedCategory by remember { mutableStateOf(category) }
 
     // Fetch movies when the selected category changes
     LaunchedEffect(selectedCategory) {
-        viewModel.fetchMovies(selectedCategory)
+        if (selectedCategory == "Favourites") {
+            viewModel.fetchFavoriteMovies()
+        } else {
+            viewModel.fetchMovies(selectedCategory)
+        }
     }
 
     Column(
@@ -225,11 +233,4 @@ fun MovieItem(movie: Movie, navController: NavController) {
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun LandingScreenPreview() {
-    LandingScreen(navController = rememberNavController())
 }

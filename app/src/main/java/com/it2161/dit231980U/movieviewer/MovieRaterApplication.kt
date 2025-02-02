@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.it2161.dit231980U.movieviewer.data.FavoriteMovie
+import com.it2161.dit231980U.movieviewer.data.Movie
 import com.it2161.dit231980U.movieviewer.data.UserProfile
 import java.io.File
 
@@ -61,6 +63,17 @@ class MovieRaterApplication : Application() {
         loadProfileFromFile(context)
     }
 
+    // Modify these methods to work with FavoriteMovie
+    fun addFavoriteMovie(movieId: Int) {
+        val favoriteMovie = FavoriteMovie(movieId) // Create a FavoriteMovie object
+        userProfile?.favoriteMovies?.add(favoriteMovie) // Add to the list of FavoriteMovies
+        saveProfileToFile(applicationContext)
+    }
 
+    fun removeFavoriteMovie(movieId: Int) {
+        val favoriteMovie = FavoriteMovie(movieId) // Create a FavoriteMovie object
+        userProfile?.favoriteMovies?.remove(favoriteMovie) // Remove from the list of FavoriteMovies
+        saveProfileToFile(applicationContext)
+    }
 
 }
