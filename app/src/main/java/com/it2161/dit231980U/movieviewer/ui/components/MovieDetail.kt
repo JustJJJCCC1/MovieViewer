@@ -3,15 +3,13 @@ package com.it2161.dit231980U.movieviewer.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -92,7 +90,7 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                 navController.navigate("landing_screen/Favourites") // Navigate with category parameter
             }) {
                 Icon(
-                    imageVector = if (isFavorite.value) Icons.Filled.Delete else Icons.Filled.Add,
+                    imageVector = if (isFavorite.value) Icons.Filled.Star else Icons.Outlined.Star,
                     contentDescription = if (isFavorite.value) "Remove from Favorites" else "Add to Favorites",
                     modifier = Modifier.size(32.dp),
                     tint = if (isFavorite.value) Color.Black else Color.Black
