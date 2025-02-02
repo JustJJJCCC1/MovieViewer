@@ -154,7 +154,7 @@ fun RegisterUserScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { navController.popBackStack() }) {
+            Button(onClick = { navController.popBackStack()}, colors = ButtonDefaults.buttonColors(Color.Black)) {
                 Text("Cancel")
             }
             Button(
@@ -173,7 +173,8 @@ fun RegisterUserScreen(
                     } else {
                         Toast.makeText(context, "Please fix errors before submitting", Toast.LENGTH_SHORT).show()
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(Color.Black)
             ) {
                 Text("Register")
             }
