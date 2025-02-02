@@ -72,12 +72,6 @@ fun ProfileScreen(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Profile",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
             IconButton(onClick = { navController.navigate("landing_screen") }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
@@ -86,6 +80,13 @@ fun ProfileScreen(navController: NavController) {
                     tint = Color.Black
                 )
             }
+            Text(
+                text ="Profile",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.width(32.dp)) // Spacer for the alignment
         }
 
         Column(modifier = Modifier.fillMaxSize()) {

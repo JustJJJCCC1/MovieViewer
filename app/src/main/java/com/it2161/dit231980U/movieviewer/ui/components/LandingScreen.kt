@@ -139,7 +139,7 @@ fun LandingScreen(navController: NavController, viewModel: MovieViewModel = view
                     .padding(horizontal = 8.dp)
             ) {
                 items(movies) { movie ->
-                    MovieItem(movie = movie)
+                    MovieItem(movie = movie, navController = navController)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -166,7 +166,7 @@ fun CategoryTab(text: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(movie: Movie, navController: NavController) {
     val formattedDate = try {
         val parser = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -178,7 +178,8 @@ fun MovieItem(movie: Movie) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { navController.navigate("movie_detail/${movie.id}") }, // Navigate to details
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
     ) {

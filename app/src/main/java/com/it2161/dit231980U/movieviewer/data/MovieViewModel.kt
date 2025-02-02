@@ -15,6 +15,11 @@ class MovieViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
+    // State to hold the details of a selected movie
+    private val _movieDetail = MutableStateFlow<MovieDetail?>(null)
+    val movieDetail: StateFlow<MovieDetail?> get() = _movieDetail
+
+
     // Function to fetch movies based on the selected category
     fun fetchMovies(category: String) {
         viewModelScope.launch {
@@ -35,6 +40,20 @@ class MovieViewModel : ViewModel() {
                 e.printStackTrace()
             } finally {
                 _isLoading.value = false // Hide loading indicator
+            }
+        }
+    }
+
+    fun fetchMovieDetails(movieId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitClient.instance.getMovieDetails(movieId)
+                _movieDetail.value = response
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
             }
         }
     }

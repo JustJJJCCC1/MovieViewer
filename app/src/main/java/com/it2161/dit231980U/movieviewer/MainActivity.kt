@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.it2161.dit231980U.movieviewer.ui.components.LoginScreen
 import com.it2161.dit231980U.movieviewer.ui.components.RegisterUserScreen
 import com.it2161.dit231980U.movieviewer.ui.components.LandingScreen
+import com.it2161.dit231980U.movieviewer.ui.components.MovieDetailScreen
 import com.it2161.dit231980U.movieviewer.ui.components.ProfileScreen
 import com.it2161.dit231980U.movieviewer.ui.theme.Assignment1Theme
 
@@ -30,6 +31,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("profile_screen") {
                         ProfileScreen(navController)
+                    }
+                    composable("movie_detail/{movieId}") { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
+                        movieId?.let { MovieDetailScreen(movieId, navController) }
                     }
                 }
             }
