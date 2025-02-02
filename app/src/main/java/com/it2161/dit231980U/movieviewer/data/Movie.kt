@@ -18,6 +18,7 @@ data class MovieDetail(
     val overview: String,
     val poster_path: String?,
     val release_date: String,
+    val adult: Boolean,
     val original_language: String,
     val runtime: Int,
     val vote_count: Int,

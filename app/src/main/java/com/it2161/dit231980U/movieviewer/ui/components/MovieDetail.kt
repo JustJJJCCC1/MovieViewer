@@ -109,7 +109,6 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                         text = "Runtime: ${movie.runtime} min",
                         fontSize = 16.sp,
                         color = Color.Black,
-                        fontWeight = FontWeight.Bold
                     )
 
                     // Release Date
@@ -128,6 +127,12 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                     // Original Language
                     Text(
                         text = "Original Language: ${movie.original_language.uppercase()}",
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    // Adult
+                    Text(
+                        text = "Family-Friendly: ${if (movie.adult) "No" else "Yes"}",
                         fontSize = 16.sp,
                         color = Color.Black
                     )
