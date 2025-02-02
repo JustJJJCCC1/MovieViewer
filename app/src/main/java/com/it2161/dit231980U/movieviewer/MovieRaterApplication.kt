@@ -11,16 +11,6 @@ import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.it2161.dit231980U.movieviewer.data.UserProfile
-import com.it2161.dit231980U.movieviewer.data.mvBeneathTheSurface
-import com.it2161.dit231980U.movieviewer.data.mvCityOfShadowsData
-import com.it2161.dit231980U.movieviewer.data.mvEchosOfEternityData
-import com.it2161.dit231980U.movieviewer.data.mvIntoTheUnknownData
-import com.it2161.dit231980U.movieviewer.data.mvLostInTimeData
-import com.it2161.dit231980U.movieviewer.data.mvShadowsOfthePastData
-import com.it2161.dit231980U.movieviewer.data.mvTheLastFrontierData
-import com.it2161.dit231980U.movieviewer.data.mvTheSilentStormData
-import jsonData
-import org.json.JSONArray
 import java.io.File
 
 class MovieRaterApplication : Application() {
@@ -76,31 +66,6 @@ class MovieRaterApplication : Application() {
         loadProfileFromFile(context)
     }
 
-    //Gets image vector.
-    fun getImgVector(fileName: String): Bitmap {
-
-        val dataValue = when (fileName) {
-
-            "IntoTheUnknown" -> mvIntoTheUnknownData
-            "EchosOfEternity" -> mvEchosOfEternityData
-            "LostInTime" -> mvLostInTimeData
-            "ShadowsOfThePast" -> mvShadowsOfthePastData
-            "BeneathTheSurface" -> mvBeneathTheSurface
-            "LastFrontier" -> mvTheLastFrontierData
-            "CityOfShadows" -> mvCityOfShadowsData
-            "SilentStorm" -> mvTheSilentStormData
-            else -> ""
-
-        }
-
-        val imageBytes = Base64.decode(
-            dataValue,
-            Base64.DEFAULT
-        )
-        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-        return imageBitmap
-    }
 
 
 }

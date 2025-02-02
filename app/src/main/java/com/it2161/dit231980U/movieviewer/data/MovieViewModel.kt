@@ -19,6 +19,9 @@ class MovieViewModel : ViewModel() {
     private val _movieDetail = MutableStateFlow<MovieDetail?>(null)
     val movieDetail: StateFlow<MovieDetail?> get() = _movieDetail
 
+    // State to hold the reviews of a selected movie
+    private val _movieReviews = MutableStateFlow<List<Review>>(emptyList())
+    val movieReviews: StateFlow<List<Review>> get() = _movieReviews
 
     // Function to fetch movies based on the selected category
     fun fetchMovies(category: String) {
@@ -54,6 +57,18 @@ class MovieViewModel : ViewModel() {
                 e.printStackTrace()
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    // Function to fetch reviews for a movie
+    fun fetchMovieReviews(movieId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.instance.getMovieReviews(movieId)
+                _movieReviews.value = response.results
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

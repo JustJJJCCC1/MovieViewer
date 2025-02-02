@@ -23,15 +23,18 @@ import com.it2161.dit231980U.movieviewer.data.MovieViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: MovieViewModel = viewModel()) {
     val movieDetail by viewModel.movieDetail.collectAsState()
+    val movieReviews by viewModel.movieReviews.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(movieId) {
         viewModel.fetchMovieDetails(movieId)
+        viewModel.fetchMovieReviews(movieId) // Fetch reviews when movie details are fetched
     }
 
     Column(
@@ -204,8 +207,83 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                 modifier = Modifier.padding(16.dp)
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Reviews Section
+        if (movieReviews.isNotEmpty()) {
+            Text(
+                text = "Reviews",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            movieReviews.sortedByDescending { it.created_at }.forEach { review ->                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                ) {
+                    // Author and Created At Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = review.author,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+
+                        // Formatted Created Date
+                        Text(
+                            text = formatDate(review.created_at),
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Review content inside a disabled outlined TextField
+                    OutlinedTextField(
+                        value = review.content,
+                        onValueChange = {},
+                        enabled = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledBorderColor = Color.DarkGray,
+                            disabledTextColor = Color.DarkGray,
+                            disabledSupportingTextColor = Color.DarkGray,
+                            disabledLabelColor = Color.DarkGray
+                        ),
+                        textStyle = LocalTextStyle.current.copy(fontSize = 14.sp, color = Color.Black),
+                        shape = RoundedCornerShape(8.dp),
+                        singleLine = false,
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        } else {
+            Text(
+                text = "No reviews available",
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }
+
+// Helper function to format the date
+fun formatDate(dateString: String?): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return try {
+        val date = inputFormat.parse(dateString)
+        outputFormat.format(date ?: Date())
+    } catch (e: Exception) {
+        "Invalid Date"
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
