@@ -28,6 +28,10 @@ class MovieViewModel : ViewModel() {
     private val _favoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
     val favoriteMovies: StateFlow<List<Movie>> get() = _favoriteMovies
 
+    // State to hold the list of similar movies
+    private val _similarMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val similarMovies: StateFlow<List<Movie>> get() = _similarMovies
+
     // Function to fetch movies based on the selected category
     fun fetchMovies(category: String) {
         viewModelScope.launch {
@@ -111,6 +115,17 @@ class MovieViewModel : ViewModel() {
                 e.printStackTrace()
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchSimilarMovies(movieId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.instance.getSimilarMovies(movieId)
+                _similarMovies.value = response.results
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

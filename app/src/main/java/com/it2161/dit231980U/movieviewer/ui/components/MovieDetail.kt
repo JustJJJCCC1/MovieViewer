@@ -38,10 +38,14 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
     val userProfile = MovieRaterApplication.instance.userProfile
     val isFavorite = remember { mutableStateOf(userProfile?.favoriteMovies?.any { it.movieId == movieId } == true) }
 
+    val similarMovies by viewModel.similarMovies.collectAsState()
+
     LaunchedEffect(movieId) {
         viewModel.fetchMovieDetails(movieId)
-        viewModel.fetchMovieReviews(movieId) // Fetch reviews when movie details are fetched
+        viewModel.fetchMovieReviews(movieId)
+        viewModel.fetchSimilarMovies(movieId) // Fetch similar movies
     }
+
 
     Column(
         modifier = Modifier
@@ -291,6 +295,46 @@ fun MovieDetailScreen(movieId: Int, navController: NavController, viewModel: Mov
                 text = "No reviews available",
                 modifier = Modifier.padding(16.dp)
             )
+        }
+
+        // Similar Movies Section
+        if (similarMovies.isNotEmpty()) {
+            Text(
+                text = "Similar Movies",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                similarMovies.forEach { movie ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        AsyncImage(
+                            model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
+                            contentDescription = movie.title,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                        Text(
+                            text = movie.title,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Black,
+                            modifier = Modifier.width(120.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
