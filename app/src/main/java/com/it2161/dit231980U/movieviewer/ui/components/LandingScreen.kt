@@ -16,11 +16,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.it2161.dit231980U.movieviewer.data.Movie
 import com.it2161.dit231980U.movieviewer.data.MovieViewModel
@@ -28,15 +26,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
 fun LandingScreen(navController: NavController, navBackStackEntry: NavBackStackEntry, viewModel: MovieViewModel = viewModel()) {
 
+    val focusManager = LocalFocusManager.current // Focus manager to clear focus
     val category = navBackStackEntry.arguments?.getString("category") ?: "Popular"
 
     // Observe the movies and loading state from the ViewModel
     val movies by viewModel.movies.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    var searchQuery by remember { mutableStateOf("") }
 
     // State to track the selected category
     var selectedCategory by remember { mutableStateOf(category) }
@@ -54,6 +56,7 @@ fun LandingScreen(navController: NavController, navBackStackEntry: NavBackStackE
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .clickable { focusManager.clearFocus() } // Unfocus when tapping anywhere
     ) {
         // Header
         Row(
@@ -65,11 +68,25 @@ fun LandingScreen(navController: NavController, navBackStackEntry: NavBackStackE
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "MovieViewer",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { query ->
+                    searchQuery = query
+                    viewModel.searchMovies(query)
+                },
+                placeholder = { Text("Search movies...", color = Color.Black) },
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(8.dp),
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Gray,
+                    cursorColor = Color.Black,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
             )
             IconButton(onClick = { navController.navigate("profile_screen") }) {
                 Icon(

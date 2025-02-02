@@ -100,4 +100,19 @@ class MovieViewModel : ViewModel() {
             }
         }
     }
+
+    fun searchMovies(query: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitClient.instance.searchMovies(query)
+                _movies.value = response.results
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
 }
