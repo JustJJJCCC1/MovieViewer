@@ -1,13 +1,8 @@
 package com.it2161.dit231980U.movieviewer
 
-//import com.it2161.dit99999x.movieviewer.data.Comments
-//import com.it2161.dit99999x.movieviewer.data.MovieItem
-//import com.it2161.dit99999x.movieviewer.data.UserProfile
+
 import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.it2161.dit231980U.movieviewer.data.UserProfile
