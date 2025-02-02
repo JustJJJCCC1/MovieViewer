@@ -157,7 +157,11 @@ fun LandingScreen(navController: NavController, navBackStackEntry: NavBackStackE
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "No movies available", fontSize = 18.sp, color = Color.Gray)
+                Text(
+                    text = if (selectedCategory == "Favourites") "There are no favourite movies yet" else "No movies available",
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
             }
         } else {
             LazyColumn(
