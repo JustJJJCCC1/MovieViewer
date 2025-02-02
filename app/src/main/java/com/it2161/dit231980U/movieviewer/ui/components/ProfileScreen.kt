@@ -1,17 +1,24 @@
 package com.it2161.dit231980U.movieviewer.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.it2161.dit231980U.movieviewer.MovieRaterApplication
@@ -53,10 +60,33 @@ fun ProfileScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(16.dp)
     ) {
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // Header
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .background(Color.LightGray)
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Profile",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            IconButton(onClick = { navController.navigate("landing_screen") }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back Icon",
+                    modifier = Modifier.size(32.dp),
+                    tint = Color.Black
+                )
+            }
+        }
 
         Column(modifier = Modifier.fillMaxSize()) {
             // Username Field
@@ -72,7 +102,7 @@ fun ProfileScreen(navController: NavController) {
                 },
                 label = { Text("Username") },
                 isError = usernameError.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Black,
                     unfocusedLabelColor = Color.Black,
@@ -124,7 +154,7 @@ fun ProfileScreen(navController: NavController) {
                     }
                 },
                 isError = passwordError.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Black,
                     unfocusedLabelColor = Color.Black,
@@ -217,7 +247,7 @@ fun ProfileScreen(navController: NavController) {
                 },
                 label = { Text("Email") },
                 isError = emailError.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Black,
                     unfocusedLabelColor = Color.Black,
@@ -243,15 +273,6 @@ fun ProfileScreen(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(
-                onClick = {
-                    navController.navigate("landing_screen")
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Back")
-            }
-
             // Save Button
             Button(
                 onClick = {
@@ -264,7 +285,7 @@ fun ProfileScreen(navController: NavController) {
                     // Navigate to the Landing Screen
                     navController.navigate("landing_screen")
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
             ) {
                 Text("Save Changes")
             }

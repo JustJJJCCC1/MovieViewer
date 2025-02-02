@@ -2,40 +2,31 @@ package com.it2161.dit231980U.movieviewer.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.it2161.dit231980U.movieviewer.data.Movie
 import com.it2161.dit231980U.movieviewer.data.MovieViewModel
-import coil.compose.AsyncImage
+import androidx.lifecycle.viewmodel.compose.viewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun LandingScreen(navController: NavController, viewModel: MovieViewModel = viewModel()) {
@@ -51,96 +42,188 @@ fun LandingScreen(navController: NavController, viewModel: MovieViewModel = view
         viewModel.fetchMovies(selectedCategory)
     }
 
-    val scrollState = rememberScrollState()
-
-    // Custom top bar with increased height and profile icon on the right
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .background(Color.White)
     ) {
+        // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp) // Increase the height of the top bar
-                .background(Color.Gray)
-                .padding(horizontal = 16.dp), // Add some padding around the elements
-            horizontalArrangement = Arrangement.End, // Align items to the right
-            verticalAlignment = Alignment.CenterVertically
+                .height(70.dp)
+                .background(Color.LightGray)
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Profile icon button on the right
-            IconButton(onClick = {
-                navController.navigate("profile_screen") // Replace with actual route for profile screen
-            }) {
-                Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Profile Icon", modifier = Modifier.size(32.dp))
+            Text(
+                text = "MovieViewer",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            IconButton(onClick = { navController.navigate("profile_screen") }) {
+                Icon(
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = "Profile Icon",
+                    modifier = Modifier.size(32.dp),
+                    tint = Color.Black
+                )
             }
         }
-        // Category Toggles
-        Row(
+
+        // Category Section with curved edges and spacing
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(top = 16.dp, start = 8.dp, end = 8.dp, bottom = 16.dp) // Space away from top bar
+                .clip(RoundedCornerShape(20.dp)) // Curved edges
+                .background(Color.LightGray) // Background for entire category section
         ) {
-            listOf("Popular", "Top Rated", "Now Playing", "Upcoming").forEach { category ->
-                Text(
-                    text = category,
+            Column {
+                // First Row of Categories
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(
                     modifier = Modifier
-                        .clickable { selectedCategory = category }
-                        .background(
-                            if (selectedCategory == category) Color.Gray else Color.Transparent
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    listOf("Popular", "Top Rated", "Now Playing").forEach { category ->
+                        CategoryTab(
+                            text = category,
+                            isSelected = selectedCategory == category,
+                            onClick = { selectedCategory = category }
                         )
-                        .padding(horizontal = 4.dp, vertical = 4.dp), // Optional: for padding inside the background
-                    color = if (selectedCategory == category) Color.White else Color.Black
-                )
+                    }
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+
+                // Second Row for "Upcoming"
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    CategoryTab(
+                        text = "Upcoming",
+                        isSelected = selectedCategory == "Upcoming",
+                        onClick = { selectedCategory = "Upcoming" }
+                    )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
             }
         }
 
         // Movie List
         if (isLoading) {
-            Text(text = "Loading...", modifier = Modifier.padding(16.dp))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Loading...", fontSize = 18.sp, color = Color.Gray)
+            }
+        } else if (movies.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "No movies available", fontSize = 18.sp, color = Color.Gray)
+            }
         } else {
-            Column {
-                // Iterating through the list of movies
-                if (isLoading) {
-                    Text(text = "Loading...", modifier = Modifier.padding(16.dp))
-                } else if (movies.isEmpty()) {
-                    Text(text = "No movies available", modifier = Modifier.padding(16.dp))
-                } else {
-                    movies.forEach { movie ->
-                        MovieItem(movie = movie)
-                    }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                items(movies) { movie ->
+                    MovieItem(movie = movie)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-
             }
         }
     }
 }
 
+@Composable
+fun CategoryTab(text: String, isSelected: Boolean, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (isSelected) Color.Black else Color.LightGray) // Gray background for inactive tabs
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = text,
+            color = if (isSelected) Color.White else Color.Black,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
 
 @Composable
 fun MovieItem(movie: Movie) {
-    Row(
+    val formattedDate = try {
+        val parser = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        LocalDate.parse(movie.release_date, parser).format(formatter)
+    } catch (e: Exception) {
+        movie.release_date // Fallback to original format if parsing fails
+    }
+
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
     ) {
-        AsyncImage(
-            model = "https://image.tmdb.org/t/p/w500${movie.poster_path ?: ""}",
-            contentDescription = movie.title,
-            modifier = Modifier.size(100.dp)
-        )
         Column(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .align(Alignment.CenterVertically)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = movie.title, style = MaterialTheme.typography.titleMedium)
-            Text(text = movie.overview, style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Release Date: ${movie.release_date}", style = MaterialTheme.typography.bodySmall)
+            // Movie Image
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/w500${movie.poster_path ?: ""}",
+                contentDescription = movie.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 200.dp) // Adjust max height as needed
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Movie Title
+            Text(
+                text = movie.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Release Date
+            Text(
+                text = "Release Date: $formattedDate",
+                fontSize = 14.sp,
+                color = Color.DarkGray,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
