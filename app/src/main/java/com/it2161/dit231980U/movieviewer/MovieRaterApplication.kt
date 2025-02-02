@@ -6,7 +6,6 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.it2161.dit231980U.movieviewer.data.FavoriteMovie
-import com.it2161.dit231980U.movieviewer.data.Movie
 import com.it2161.dit231980U.movieviewer.data.UserProfile
 import java.io.File
 

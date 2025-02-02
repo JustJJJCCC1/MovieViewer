@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,7 +22,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.it2161.dit231980U.movieviewer.MovieRaterApplication
 import com.it2161.dit231980U.movieviewer.R
-import com.it2161.dit231980U.movieviewer.data.UserProfile
 
 @Composable
 fun ProfileScreen(navController: NavController) {
