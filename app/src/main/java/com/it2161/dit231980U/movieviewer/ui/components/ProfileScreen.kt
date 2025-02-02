@@ -30,21 +30,9 @@ fun ProfileScreen(navController: NavController) {
     val scrollState = rememberScrollState()
 
     var isPasswordVisible by remember { mutableStateOf(false) }
-    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
-
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-
-    // Error states
-    var usernameError by remember { mutableStateOf("") }
-    var emailError by remember { mutableStateOf("") }
-    var passwordError by remember { mutableStateOf("") }
-    var confirmPasswordError by remember { mutableStateOf("") }
-
-    // Track if password is changed
-    var isPasswordChanged by remember { mutableStateOf(false) }
 
     // Load the existing profile data
     LaunchedEffect(Unit) {
@@ -93,57 +81,28 @@ fun ProfileScreen(navController: NavController) {
             // Username Field
             OutlinedTextField(
                 value = username,
-                onValueChange = { newUsername ->
-                    username = newUsername
-                    usernameError = when {
-                        newUsername.length < 3 -> "Username must be at least 3 characters"
-                        newUsername.length > 30 -> "Username must be no more than 30 characters"
-                        else -> ""
-                    }
-                },
+                onValueChange = {},
                 label = { Text("Username") },
-                isError = usernameError.isNotEmpty(),
+                enabled = false, // Disable editing
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Black,
-                    unfocusedLabelColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    unfocusedSupportingTextColor = Color.Black,
-                    focusedBorderColor = Color.Black,
-                    focusedLabelColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    focusedSupportingTextColor = Color.Black,
-                    errorBorderColor = Color.Red,
-                    errorLabelColor = Color.Red,
-                    errorTextColor = Color.Red,
+                    disabledTextColor = Color.Black,
+                    disabledBorderColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledLeadingIconColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black,
+                    disabledPlaceholderColor = Color.Black
                 )
             )
-
-            if (usernameError.isNotEmpty()) {
-                Text(
-                    text = usernameError,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Password Field
             OutlinedTextField(
                 value = password,
-                onValueChange = { newPassword ->
-                    password = newPassword
-                    isPasswordChanged = newPassword != MovieRaterApplication.instance.userProfile?.password
-                    passwordError = when {
-                        newPassword.length < 8 -> "Password must be at least 8 characters"
-                        !newPassword.any { it.isDigit() } -> "Password must contain at least one number"
-                        !newPassword.any { !it.isLetterOrDigit() } -> "Password must contain at least one special character"
-                        else -> ""
-                    }
-                },
+                onValueChange = {},
                 label = { Text("Password") },
+                enabled = false, // Disable editing
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
@@ -154,142 +113,37 @@ fun ProfileScreen(navController: NavController) {
                         )
                     }
                 },
-                isError = passwordError.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Black,
-                    unfocusedLabelColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    unfocusedSupportingTextColor = Color.Black,
-                    focusedBorderColor = Color.Black,
-                    focusedLabelColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    focusedSupportingTextColor = Color.Black,
-                    errorBorderColor = Color.Red,
-                    errorLabelColor = Color.Red,
-                    errorTextColor = Color.Red,
+                    disabledTextColor = Color.Black,
+                    disabledBorderColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledLeadingIconColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black,
+                    disabledPlaceholderColor = Color.Black
                 )
             )
-
-            if (passwordError.isNotEmpty()) {
-                Text(
-                    text = passwordError,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
-
-            // Show Confirm Password field only if password is changed
-            if (isPasswordChanged) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Confirm Password Field
-                OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = { newConfirmPassword ->
-                        confirmPassword = newConfirmPassword
-                        confirmPasswordError = if (newConfirmPassword != password) {
-                            "Passwords do not match"
-                        } else {
-                            ""
-                        }
-                    },
-                    label = { Text("Confirm Password") },
-                    visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
-                            Icon(
-                                painter = painterResource(if (isConfirmPasswordVisible) R.drawable.visibility else R.drawable.visibility_off),
-                                contentDescription = if (isConfirmPasswordVisible) "Hide password" else "Show password",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    },
-                    isError = confirmPasswordError.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Black,
-                        unfocusedLabelColor = Color.Black,
-                        unfocusedTextColor = Color.Black,
-                        unfocusedSupportingTextColor = Color.Black,
-                        focusedBorderColor = Color.Black,
-                        focusedLabelColor = Color.Black,
-                        focusedTextColor = Color.Black,
-                        focusedSupportingTextColor = Color.Black,
-                        errorBorderColor = Color.Red,
-                        errorLabelColor = Color.Red,
-                        errorTextColor = Color.Red,
-                    )
-                )
-
-                if (confirmPasswordError.isNotEmpty()) {
-                    Text(
-                        text = confirmPasswordError,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                    )
-                }
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Email Field
             OutlinedTextField(
                 value = email,
-                onValueChange = { newEmail ->
-                    email = newEmail
-                    emailError = if (android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
-                        ""
-                    } else {
-                        "Invalid email format"
-                    }
-                },
+                onValueChange = {},
                 label = { Text("Email") },
-                isError = emailError.isNotEmpty(),
+                enabled = false, // Disable editing
                 modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Black,
-                    unfocusedLabelColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    unfocusedSupportingTextColor = Color.Black,
-                    focusedBorderColor = Color.Black,
-                    focusedLabelColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    focusedSupportingTextColor = Color.Black,
-                    errorBorderColor = Color.Red,
-                    errorLabelColor = Color.Red,
-                    errorTextColor = Color.Red,
+                    disabledTextColor = Color.Black,
+                    disabledBorderColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledLeadingIconColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black,
+                    disabledPlaceholderColor = Color.Black
                 )
             )
 
-            if (emailError.isNotEmpty()) {
-                Text(
-                    text = emailError,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
             Spacer(modifier = Modifier.height(30.dp))
-
-            // Save Button
-            Button(
-                onClick = {
-                    // Save the updated profile
-                    MovieRaterApplication.instance.userProfile = UserProfile(
-                        userName = username,
-                        password = password,
-                        email = email
-                    )
-                    // Navigate to the Landing Screen
-                    navController.navigate("landing_screen/Popular")
-                },
-                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
-            ) {
-                Text("Save Changes")
-            }
         }
     }
 }
